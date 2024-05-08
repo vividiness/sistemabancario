@@ -1,7 +1,3 @@
-import os
-
-#saques armazenados em um variável e exibidos na operação
-
 #menu do projeto
 menu = '''
 [d] Depositar
@@ -12,17 +8,12 @@ menu = '''
 =>
 '''
 
-#limpar o terminal
-def limpar():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
 #variáveis globais
 saldo = 0
 limite = 500
 LIMITE_SAQUES = 3
 num_saques = 0
-extrato = []
+extrato = ""
 
 while True:
     op = input(menu).lower()
@@ -37,40 +28,39 @@ while True:
 
         saldo+=x
         print('Saldo depositado!')
+        extrato += "Depósito: R$"+str(round(x, 2))+", \n"
             
     elif op == 's':
         #Saque
         y = float(input('Digite o valor que deseja sacar \n=>' ))
 
-        #TODO consertar erro
-        while True:
-            if y>saldo:
-                print('Saque inválido! Valor maior que o saldo.')
-                
+        if y>saldo:
+            print('Saque inválido! Valor maior que o saldo.')
+            continue  
 
-            elif y>limite:
-                print(f'Valor acima do permitido.  Digite um valor abaixo de R$ {limite}')
-                
+        elif y>limite:
+            print(f'Valor acima do permitido.  Digite um valor abaixo de R$ {limite}')
+            continue    
 
-            elif num_saques > LIMITE_SAQUES:
-                print('Limite de saques diários atingidos.')
-                break
-
-        num_saques+=1
-        saldo-=y
-        extrato += str(y)+', '
-        print('Valor sacado!')
+        elif num_saques >= LIMITE_SAQUES:
+            print('Limite de saques diários atingidos.')
+            continue
+        
+        else:
+            num_saques+=1
+            saldo-=y
+            extrato += "Saque: R$"+str(round(y, 2))+', \n'
+            print('Valor sacado!')
+            print(num_saques)
 
     elif op == 'e':
         #Extrato
-        print(f'Saldo: {saldo} \nTodos os extratos: {extrato}')
-
+        print(f'----- Extrato -----\n******************** \nSaldo: R${saldo: .2f} \n******************** \nTodas as operações: \n{extrato}')
+        
     elif op == 'x':
-        print('See you soon!')
+        print('Até logo!')
         break
     else:
         print('Essa opção não existe.')
-        limpar()
-
 
 
